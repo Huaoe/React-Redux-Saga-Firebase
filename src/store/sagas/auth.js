@@ -23,11 +23,13 @@ export function* authUserSaga(action) {
     password: action.password,
     returnSecureToken: true
   };
-  let url =
-    "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=your_firebase_api_key";
+  const apiKey = process.env.REACT_APP_FIREBASE_API_KEY;
+  if (!apiKey) {
+    throw new Error("REACT_APP_FIREBASE_API_KEY is not defined");
+  }
+  let url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${apiKey}`;
   if (!action.isSignup) {
-    url =
-      "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=your_firebase_api_key";
+    url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${apiKey}`;
   }
   try {
     const response = yield axios.post(url, authData);
