@@ -23,11 +23,13 @@ export function* authUserSaga(action) {
     password: action.password,
     returnSecureToken: true
   };
-  let url =
-    "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyAWAEvqeUBKzcWYAGs-KlAz0VE3tNJU6h4";
+  const apiKey = process.env.REACT_APP_FIREBASE_API_KEY;
+  if (!apiKey) {
+    throw new Error("REACT_APP_FIREBASE_API_KEY is not defined");
+  }
+  let url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${apiKey}`;
   if (!action.isSignup) {
-    url =
-      "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyAWAEvqeUBKzcWYAGs-KlAz0VE3tNJU6h4";
+    url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${apiKey}`;
   }
   try {
     const response = yield axios.post(url, authData);
